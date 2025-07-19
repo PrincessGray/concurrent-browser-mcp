@@ -13,7 +13,7 @@ export class BrowserManager {
   }
 
   /**
-   * 创建新的浏览器实例
+   * Create a new browser instance
    */
   async createInstance(
     browserConfig?: Partial<BrowserConfig>,
@@ -75,7 +75,7 @@ export class BrowserManager {
   }
 
   /**
-   * 获取浏览器实例
+   * Get browser instance
    */
   getInstance(instanceId: string): BrowserInstance | undefined {
     const instance = this.instances.get(instanceId);
@@ -86,7 +86,7 @@ export class BrowserManager {
   }
 
   /**
-   * 列出所有实例
+   * List all instances
    */
   listInstances(): ToolResult {
     const instanceList = Array.from(this.instances.values()).map(instance => ({
@@ -109,7 +109,7 @@ export class BrowserManager {
   }
 
   /**
-   * 关闭浏览器实例
+   * Close browser instance
    */
   async closeInstance(instanceId: string): Promise<ToolResult> {
     try {
@@ -138,7 +138,7 @@ export class BrowserManager {
   }
 
   /**
-   * 关闭所有实例
+   * Close all instances
    */
   async closeAllInstances(): Promise<ToolResult> {
     try {
@@ -163,7 +163,7 @@ export class BrowserManager {
   }
 
   /**
-   * 启动浏览器
+   * Launch browser
    */
   private async launchBrowser(config: BrowserConfig): Promise<Browser> {
     const launchOptions: any = {
@@ -187,7 +187,7 @@ export class BrowserManager {
   }
 
   /**
-   * 启动清理定时器
+   * Start cleanup timer
    */
   private startCleanupTimer(): void {
     this.cleanupTimer = setInterval(async () => {
@@ -196,7 +196,7 @@ export class BrowserManager {
   }
 
   /**
-   * 清理非活跃实例
+   * Clean up inactive instances
    */
   private async cleanupInactiveInstances(): Promise<void> {
     const now = new Date();
@@ -216,7 +216,7 @@ export class BrowserManager {
   }
 
   /**
-   * 销毁管理器
+   * Destroy manager
    */
   async destroy(): Promise<void> {
     if (this.cleanupTimer) {

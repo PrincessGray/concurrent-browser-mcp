@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
 /**
- * 演示脚本：展示 Concurrent Browser MCP 服务器的多并发功能
+ * Demo script: Demonstrates multi-concurrent functionality of Concurrent Browser MCP Server
  * 
- * 此脚本演示了如何：
- * 1. 创建多个浏览器实例
- * 2. 并发执行不同的任务
- * 3. 管理实例生命周期
- * 4. 处理并发操作的结果
+ * This script demonstrates how to:
+ * 1. Create multiple browser instances
+ * 2. Execute different tasks concurrently
+ * 3. Manage instance lifecycle
+ * 4. Handle concurrent operation results
  */
 
 import { spawn } from 'child_process';
 import { setTimeout } from 'timers/promises';
 
-// 模拟 MCP 工具调用
+// Mock MCP tool calls
 class MockMCPClient {
   constructor() {
     this.serverProcess = null;
@@ -21,22 +21,22 @@ class MockMCPClient {
   }
 
   async startServer() {
-    console.log('🚀 启动 Concurrent Browser MCP 服务器...');
+    console.log('🚀 Starting Concurrent Browser MCP Server...');
     
-    // 在实际应用中，这里会启动 MCP 服务器
-    // 为了演示，我们只是模拟
+    // In real application, this would start the MCP server
+    // For demo purposes, we just simulate
     await setTimeout(1000);
-    console.log('✅ 服务器已启动');
+    console.log('✅ Server started');
   }
 
   async callTool(name, args) {
     const requestId = ++this.requestId;
-    console.log(`📞 调用工具: ${name}`, args ? `(${JSON.stringify(args)})` : '');
+    console.log(`📞 Calling tool: ${name}`, args ? `(${JSON.stringify(args)})` : '');
     
-    // 模拟工具调用延迟
+    // Simulate tool call delay
     await setTimeout(Math.random() * 1000 + 500);
     
-    // 模拟不同工具的响应
+    // Simulate different tool responses
     switch (name) {
       case 'browser_create_instance':
         return {
@@ -68,7 +68,7 @@ class MockMCPClient {
           success: true,
           data: {
             url: args.url,
-            title: `示例页面 - ${args.url}`,
+            title: `Example Page - ${args.url}`,
             instanceId: args.instanceId
           }
         };
@@ -95,19 +95,19 @@ class MockMCPClient {
       default:
         return {
           success: true,
-          data: { message: `工具 ${name} 执行成功`, instanceId: args?.instanceId }
+          data: { message: `Tool ${name} executed successfully`, instanceId: args?.instanceId }
         };
     }
   }
 
   async stopServer() {
-    console.log('🛑 停止服务器...');
+    console.log('🛑 Stopping server...');
     await setTimeout(500);
-    console.log('✅ 服务器已停止');
+    console.log('✅ Server stopped');
   }
 }
 
-// 演示场景
+  // Demo scenarios
 class ConcurrentBrowserDemo {
   constructor() {
     this.client = new MockMCPClient();
@@ -115,48 +115,48 @@ class ConcurrentBrowserDemo {
   }
 
   async run() {
-    console.log('🎬 开始演示 Concurrent Browser MCP 服务器\n');
+    console.log('🎬 Starting Concurrent Browser MCP Server Demo\n');
     
     try {
-      // 启动服务器
+      // Start server
       await this.client.startServer();
       console.log('');
 
-      // 场景1：创建多个浏览器实例
+      // Scenario 1: Create multiple browser instances
       await this.demo1_CreateMultipleInstances();
       console.log('');
 
-      // 场景2：并发执行不同任务
+      // Scenario 2: Execute different tasks concurrently
       await this.demo2_ConcurrentTasks();
       console.log('');
 
-      // 场景3：实例管理
+      // Scenario 3: Instance management
       await this.demo3_InstanceManagement();
       console.log('');
 
-      // 场景4：批量操作
+      // Scenario 4: Batch operations
       await this.demo4_BatchOperations();
       console.log('');
 
     } catch (error) {
-      console.error('❌ 演示过程中出错:', error);
+      console.error('❌ Error during demo:', error);
     } finally {
-      // 清理
+      // Cleanup
       await this.cleanup();
     }
   }
 
   async demo1_CreateMultipleInstances() {
-    console.log('📋 场景1: 创建多个浏览器实例');
+    console.log('📋 Scenario 1: Create multiple browser instances');
     console.log('─'.repeat(50));
 
     const configs = [
-      { browserType: 'chromium', metadata: { name: 'worker-1', description: 'Chrome浏览器实例' } },
-      { browserType: 'firefox', metadata: { name: 'worker-2', description: 'Firefox浏览器实例' } },
-      { browserType: 'webkit', metadata: { name: 'worker-3', description: 'Safari浏览器实例' } }
+      { browserType: 'chromium', metadata: { name: 'worker-1', description: 'Chrome browser instance' } },
+      { browserType: 'firefox', metadata: { name: 'worker-2', description: 'Firefox browser instance' } },
+      { browserType: 'webkit', metadata: { name: 'worker-3', description: 'Safari browser instance' } }
     ];
 
-    console.log('🔧 并发创建3个不同类型的浏览器实例...');
+    console.log('🔧 Creating 3 different types of browser instances concurrently...');
     
     const createPromises = configs.map(config => 
       this.client.callTool('browser_create_instance', config)
@@ -167,17 +167,17 @@ class ConcurrentBrowserDemo {
     results.forEach((result, index) => {
       if (result.success) {
         this.instances.push(result.data);
-        console.log(`✅ 实例 ${index + 1}: ${result.data.instanceId} (${result.data.browserType})`);
+        console.log(`✅ Instance ${index + 1}: ${result.data.instanceId} (${result.data.browserType})`);
       } else {
-        console.log(`❌ 实例 ${index + 1}: 创建失败`);
+        console.log(`❌ Instance ${index + 1}: Creation failed`);
       }
     });
 
-    console.log(`📊 共创建了 ${this.instances.length} 个实例`);
+    console.log(`📊 Created ${this.instances.length} instances in total`);
   }
 
   async demo2_ConcurrentTasks() {
-    console.log('📋 场景2: 并发执行不同任务');
+    console.log('📋 Scenario 2: Execute different tasks concurrently');
     console.log('─'.repeat(50));
 
     const tasks = [
@@ -186,7 +186,7 @@ class ConcurrentBrowserDemo {
       { instanceId: this.instances[2]?.instanceId, url: 'https://stackoverflow.com' }
     ];
 
-    console.log('🌐 并发导航到不同网站...');
+    console.log('🌐 Navigating to different websites concurrently...');
     
     const navPromises = tasks.map(task => 
       this.client.callTool('browser_navigate', task)
@@ -196,13 +196,13 @@ class ConcurrentBrowserDemo {
     
     navResults.forEach((result, index) => {
       if (result.success) {
-        console.log(`✅ 导航 ${index + 1}: ${result.data.url} - ${result.data.title}`);
+        console.log(`✅ Navigation ${index + 1}: ${result.data.url} - ${result.data.title}`);
       } else {
-        console.log(`❌ 导航 ${index + 1}: 失败`);
+        console.log(`❌ Navigation ${index + 1}: Failed`);
       }
     });
 
-    console.log('📸 并发截图...');
+    console.log('📸 Taking screenshots concurrently...');
     
     const screenshotPromises = this.instances.map(instance => 
       this.client.callTool('browser_screenshot', { instanceId: instance.instanceId })
@@ -212,40 +212,40 @@ class ConcurrentBrowserDemo {
     
     screenshotResults.forEach((result, index) => {
       if (result.success) {
-        console.log(`✅ 截图 ${index + 1}: 已保存 (${result.data.type})`);
+        console.log(`✅ Screenshot ${index + 1}: Saved (${result.data.type})`);
       } else {
-        console.log(`❌ 截图 ${index + 1}: 失败`);
+        console.log(`❌ Screenshot ${index + 1}: Failed`);
       }
     });
   }
 
   async demo3_InstanceManagement() {
-    console.log('📋 场景3: 实例管理');
+    console.log('📋 Scenario 3: Instance management');
     console.log('─'.repeat(50));
 
-    // 列出所有实例
-    console.log('📋 列出所有实例...');
+    // List all instances
+    console.log('📋 Listing all instances...');
     const listResult = await this.client.callTool('browser_list_instances');
     
     if (listResult.success) {
-      console.log(`📊 实例统计: ${listResult.data.totalCount}/${listResult.data.maxInstances}`);
+      console.log(`📊 Instance statistics: ${listResult.data.totalCount}/${listResult.data.maxInstances}`);
       listResult.data.instances.forEach(instance => {
-        console.log(`  - ${instance.id} (${instance.metadata?.name || '未命名'})`);
+        console.log(`  - ${instance.id} (${instance.metadata?.name || 'Unnamed'})`);
       });
     }
 
-    // 模拟实例超时清理
-    console.log('🧹 模拟自动清理超时实例...');
+    // Simulate instance timeout cleanup
+    console.log('🧹 Simulating automatic cleanup of timed-out instances...');
     await setTimeout(1000);
-    console.log('✅ 清理完成，所有实例都在正常运行');
+    console.log('✅ Cleanup completed, all instances are running normally');
   }
 
   async demo4_BatchOperations() {
-    console.log('📋 场景4: 批量操作');
+    console.log('📋 Scenario 4: Batch operations');
     console.log('─'.repeat(50));
 
-    // 批量执行 JavaScript
-    console.log('🔧 批量执行 JavaScript...');
+    // Batch execute JavaScript
+    console.log('🔧 Batch executing JavaScript...');
     const jsPromises = this.instances.map(instance => 
       this.client.callTool('browser_evaluate', {
         instanceId: instance.instanceId,
@@ -257,14 +257,14 @@ class ConcurrentBrowserDemo {
     
     jsResults.forEach((result, index) => {
       if (result.success) {
-        console.log(`✅ JS执行 ${index + 1}: 成功`);
+        console.log(`✅ JS execution ${index + 1}: Success`);
       } else {
-        console.log(`❌ JS执行 ${index + 1}: 失败`);
+        console.log(`❌ JS execution ${index + 1}: Failed`);
       }
     });
 
-    // 批量点击操作
-    console.log('🖱️ 批量点击操作...');
+    // Batch click operations
+    console.log('🖱️ Batch click operations...');
     const clickPromises = this.instances.map(instance => 
       this.client.callTool('browser_click', {
         instanceId: instance.instanceId,
@@ -276,33 +276,33 @@ class ConcurrentBrowserDemo {
     
     clickResults.forEach((result, index) => {
       if (result.success) {
-        console.log(`✅ 点击 ${index + 1}: 成功`);
+        console.log(`✅ Click ${index + 1}: Success`);
       } else {
-        console.log(`❌ 点击 ${index + 1}: 失败`);
+        console.log(`❌ Click ${index + 1}: Failed`);
       }
     });
   }
 
   async cleanup() {
-    console.log('🧹 清理资源...');
+    console.log('🧹 Cleaning up resources...');
     
-    // 关闭所有实例
+    // Close all instances
     if (this.instances.length > 0) {
       const closePromises = this.instances.map(instance => 
         this.client.callTool('browser_close_instance', { instanceId: instance.instanceId })
       );
 
       await Promise.all(closePromises);
-      console.log(`✅ 已关闭 ${this.instances.length} 个实例`);
+      console.log(`✅ Closed ${this.instances.length} instances`);
     }
 
-    // 停止服务器
+    // Stop server
     await this.client.stopServer();
-    console.log('✅ 清理完成');
+    console.log('✅ Cleanup completed');
   }
 }
 
-// 运行演示
+// Run demo
 if (import.meta.url === `file://${process.argv[1]}`) {
   const demo = new ConcurrentBrowserDemo();
   demo.run().catch(console.error);

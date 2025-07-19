@@ -1133,10 +1133,10 @@ export class BrowserTools {
                 case 'nav':
                 case 'footer':
                 case 'aside':
-                  // 忽略这些元素
+                  // Ignore these elements
                   break;
                 default:
-                  // 对于其他元素，继续递归处理子元素
+                  // For other elements, continue recursive processing of child elements
                   markdown += htmlToMarkdown(el, depth);
                   break;
               }
@@ -1146,23 +1146,23 @@ export class BrowserTools {
           return markdown;
         }
 
-        // 提取页面标题
+        // Extract page title
         const title = document.title;
         const url = window.location.href;
         
-        // 生成Markdown内容
+        // Generate Markdown content
         let content = `# ${title}\n\n**URL:** ${url}\n\n`;
         content += htmlToMarkdown(rootElement);
         
-        // 清理多余的空行和空格
+        // Clean up extra line breaks and spaces
         content = content
           .replace(/\n{3,}/g, '\n\n')
           .replace(/[ \t]+/g, ' ')
           .trim();
         
-        // 截断内容如果超过最大长度
+        // Truncate content if exceeds maximum length
         if (content.length > maxLength) {
-          content = content.substring(0, maxLength) + '\n\n[内容已截断...]';
+          content = content.substring(0, maxLength) + '\n\n[Content truncated...]';
         }
         
         return content;

@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
 /**
- * 真实浏览器截图测试脚本
- * 这个脚本会真正启动浏览器并保存截图文件
+ * Real browser screenshot test script
+ * This script actually starts a browser and saves screenshot files
  */
 
 import { chromium } from 'playwright';
 import { promises as fs } from 'fs';
 
 /**
- * 提取页面Markdown内容的函数
+ * Function to extract page Markdown content
  */
 async function extractMarkdown(page, siteName) {
   try {
     const markdownContent = await page.evaluate(() => {
-      // HTML到Markdown转换函数（简化版，与MCP工具中相同的逻辑）
+      // HTML to Markdown conversion function (simplified version, same logic as in MCP tools)
       function htmlToMarkdown(element, depth = 0) {
         let markdown = '';
         const indent = '  '.repeat(depth);
@@ -86,7 +86,7 @@ async function extractMarkdown(page, siteName) {
               case 'style':
               case 'nav':
               case 'footer':
-                // 忽略这些元素
+                // Ignore these elements
                 break;
               default:
                 markdown += htmlToMarkdown(el, depth);
@@ -98,123 +98,123 @@ async function extractMarkdown(page, siteName) {
         return markdown;
       }
 
-      // 提取页面内容
+      // Extract page content
       const title = document.title;
       const url = window.location.href;
       let content = `# ${title}\n\n**URL:** ${url}\n\n`;
       content += htmlToMarkdown(document.body);
       
-      // 清理内容
+      // Clean up content
       content = content
         .replace(/\n{3,}/g, '\n\n')
         .replace(/[ \t]+/g, ' ')
         .trim();
       
-      // 限制长度
+      // Limit length
       if (content.length > 2000) {
-        content = content.substring(0, 2000) + '\n\n[内容已截断...]';
+        content = content.substring(0, 2000) + '\n\n[Content truncated...]';
       }
       
       return content;
     });
 
-    // 保存Markdown内容到文件
+    // Save Markdown content to file
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `markdown-${siteName}-${timestamp}.md`;
     await fs.writeFile(filename, markdownContent, 'utf8');
     
-    console.log(`✅ Markdown内容已保存: ${filename} (${(markdownContent.length / 1024).toFixed(2)} KB)`);
+    console.log(`✅ Markdown content saved: ${filename} (${(markdownContent.length / 1024).toFixed(2)} KB)`);
     
     return { filename, content: markdownContent };
   } catch (error) {
-    console.log(`⚠️ 提取${siteName}的Markdown内容失败: ${error.message}`);
+    console.log(`⚠️ Failed to extract Markdown content for ${siteName}: ${error.message}`);
     return null;
   }
 }
 
 async function testRealScreenshot() {
-  console.log('🚀 启动真实浏览器截图测试...');
+  console.log('🚀 Starting real browser screenshot test...');
   
   let browser;
   
   try {
-    // 启动浏览器
+    // Launch browser
     browser = await chromium.launch({ headless: true });
-    console.log('✅ 浏览器已启动');
+    console.log('✅ Browser launched');
     
-    // 创建页面
+    // Create page
     const page = await browser.newPage();
-    console.log('✅ 页面已创建');
+    console.log('✅ Page created');
     
-    // 导航到测试页面
-    console.log('🌐 正在导航到 https://example.com...');
+    // Navigate to test page
+    console.log('🌐 Navigating to https://example.com...');
     await page.goto('https://example.com');
-    console.log('✅ 页面加载完成');
+    console.log('✅ Page loaded successfully');
     
-    // 等待页面完全加载
+    // Wait for page to fully load
     await page.waitForLoadState('networkidle');
     
-    // 提取Markdown内容
-    console.log('📄 正在提取页面Markdown内容...');
+    // Extract Markdown content
+    console.log('📄 Extracting page Markdown content...');
     const markdownContent = await extractMarkdown(page, 'example.com');
     
-    // 截图并保存
+    // Take screenshot and save
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `screenshot-${timestamp}.png`;
     
-    console.log(`📸 正在截图并保存为 ${filename}...`);
+    console.log(`📸 Taking screenshot and saving as ${filename}...`);
     await page.screenshot({ 
       path: filename,
       fullPage: true,
       type: 'png'
     });
     
-    console.log(`✅ 截图已保存: ${filename}`);
+    console.log(`✅ Screenshot saved: ${filename}`);
     
-    // 检查文件是否存在
+    // Check if file exists
     const stats = await fs.stat(filename);
-    console.log(`📊 文件大小: ${(stats.size / 1024).toFixed(2)} KB`);
-    console.log(`📂 文件位置: ${process.cwd()}/${filename}`);
+    console.log(`📊 File size: ${(stats.size / 1024).toFixed(2)} KB`);
+    console.log(`📂 File location: ${process.cwd()}/${filename}`);
     
-    // 再截图几个不同的网站进行对比
+    // Take screenshots of different websites for comparison
     const sites = [
       { url: 'https://github.com', name: 'github' }
     ];
     
           for (const site of sites) {
         try {
-          console.log(`🌐 正在访问 ${site.url}...`);
+          console.log(`🌐 Visiting ${site.url}...`);
           await page.goto(site.url);
           await page.waitForLoadState('networkidle');
           
-          // 提取Markdown内容
-          console.log(`📄 正在提取 ${site.name} 的Markdown内容...`);
+          // Extract Markdown content
+          console.log(`📄 Extracting Markdown content for ${site.name}...`);
           await extractMarkdown(page, site.name);
           
           const siteFilename = `screenshot-${site.name}-${timestamp}.png`;
           await page.screenshot({ 
             path: siteFilename,
-            fullPage: false, // 只截取可视区域，更快
+            fullPage: false, // Only capture viewport area, faster
             type: 'png'
           });
           
           const siteStats = await fs.stat(siteFilename);
-          console.log(`✅ ${site.name} 截图已保存: ${siteFilename} (${(siteStats.size / 1024).toFixed(2)} KB)`);
+          console.log(`✅ ${site.name} screenshot saved: ${siteFilename} (${(siteStats.size / 1024).toFixed(2)} KB)`);
           
         } catch (error) {
-          console.log(`⚠️ ${site.name} 处理失败: ${error.message}`);
+          console.log(`⚠️ ${site.name} processing failed: ${error.message}`);
         }
       }
     
   } catch (error) {
-    console.error('❌ 测试失败:', error.message);
+    console.error('❌ Test failed:', error.message);
   } finally {
     if (browser) {
       await browser.close();
-      console.log('🛑 浏览器已关闭');
+      console.log('🛑 Browser closed');
     }
   }
 }
 
-// 运行测试
+// Run test
 testRealScreenshot().catch(console.error); 
