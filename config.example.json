@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "concurrent-browser": {
+      "command": "npx",
+      "args": ["concurrent-browser-mcp", "--max-instances", "20"]
+    }
+  }
+} 
