@@ -153,7 +153,7 @@ If you used `npm link`:
 
 ## Available Tools
 
-![Tool Classification](./assets/tools.png)
+![Tool Classification](./assets/tools-en.png)
 
 ### Instance Management
 
