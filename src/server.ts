@@ -36,7 +36,7 @@ export class ConcurrentBrowserServer {
   }
 
   private setupHandlers() {
-    // 处理工具列表请求
+    // Handle tool list requests
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       const tools = this.browserTools.getTools();
       return {
@@ -44,7 +44,7 @@ export class ConcurrentBrowserServer {
       };
     });
 
-    // 处理工具调用请求
+    // Handle tool call requests
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const { name, arguments: args } = request.params;
 
@@ -74,15 +74,15 @@ export class ConcurrentBrowserServer {
       }
     });
 
-    // 处理服务器关闭
+    // Handle server shutdown
     process.on('SIGINT', async () => {
-      console.log('\n正在关闭服务器...');
+      console.log('\nShutting down server...');
       await this.shutdown();
       process.exit(0);
     });
 
     process.on('SIGTERM', async () => {
-      console.log('\n正在关闭服务器...');
+      console.log('\nShutting down server...');
       await this.shutdown();
       process.exit(0);
     });
@@ -91,20 +91,20 @@ export class ConcurrentBrowserServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('Concurrent Browser MCP Server 已启动');
+    console.error('Concurrent Browser MCP Server started');
   }
 
   async shutdown() {
     try {
       await this.browserManager.destroy();
-      console.error('服务器已关闭');
-    } catch (error) {
-      console.error('关闭服务器时出错:', error);
+          console.error('Server closed');
+  } catch (error) {
+    console.error('Error closing server:', error);
     }
   }
 }
 
-// 默认配置
+// Default configuration
 export const defaultConfig: ServerConfig = {
   maxInstances: 20,
   defaultBrowserConfig: {
@@ -118,6 +118,6 @@ export const defaultConfig: ServerConfig = {
       ignoreHTTPSErrors: true,
     },
   },
-  instanceTimeout: 30 * 60 * 1000, // 30分钟
-  cleanupInterval: 5 * 60 * 1000, // 5分钟
+  instanceTimeout: 30 * 60 * 1000, // 30 minutes
+  cleanupInterval: 5 * 60 * 1000, // 5 minutes
 }; 

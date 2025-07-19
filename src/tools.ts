@@ -12,26 +12,26 @@ export class BrowserTools {
   constructor(private browserManager: BrowserManager) {}
 
   /**
-   * 获取所有工具定义
+   * Get all tool definitions
    */
   getTools(): Tool[] {
     return [
-      // 实例管理工具
+      // Instance management tools
       {
         name: 'browser_create_instance',
-        description: '创建新的浏览器实例',
+        description: 'Create a new browser instance',
         inputSchema: {
           type: 'object',
           properties: {
             browserType: {
               type: 'string',
               enum: ['chromium', 'firefox', 'webkit'],
-              description: '浏览器类型',
+              description: 'Browser type',
               default: 'chromium'
             },
             headless: {
               type: 'boolean',
-              description: '是否以无头模式运行',
+              description: 'Whether to run in headless mode',
               default: true
             },
             viewport: {
@@ -40,27 +40,27 @@ export class BrowserTools {
                 width: { type: 'number', default: 1280 },
                 height: { type: 'number', default: 720 }
               },
-              description: '视口大小'
+              description: 'Viewport size'
             },
             userAgent: {
               type: 'string',
-              description: '用户代理字符串'
+              description: 'User agent string'
             },
             metadata: {
               type: 'object',
               properties: {
-                name: { type: 'string', description: '实例名称' },
-                description: { type: 'string', description: '实例描述' },
-                tags: { type: 'array', items: { type: 'string' }, description: '标签' }
+                name: { type: 'string', description: 'Instance name' },
+                description: { type: 'string', description: 'Instance description' },
+                tags: { type: 'array', items: { type: 'string' }, description: 'Tags' }
               },
-              description: '实例元数据'
+              description: 'Instance metadata'
             }
           }
         }
       },
       {
         name: 'browser_list_instances',
-        description: '列出所有浏览器实例',
+        description: 'List all browser instances',
         inputSchema: {
           type: 'object',
           properties: {}
@@ -68,13 +68,13 @@ export class BrowserTools {
       },
       {
         name: 'browser_close_instance',
-        description: '关闭指定的浏览器实例',
+        description: 'Close the specified browser instance',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             }
           },
           required: ['instanceId']
@@ -82,37 +82,37 @@ export class BrowserTools {
       },
       {
         name: 'browser_close_all_instances',
-        description: '关闭所有浏览器实例',
+        description: 'Close all browser instances',
         inputSchema: {
           type: 'object',
           properties: {}
         }
       },
 
-      // 导航工具
+      // Navigation tools
       {
         name: 'browser_navigate',
-        description: '导航到指定URL',
+        description: 'Navigate to a specified URL',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             url: {
               type: 'string',
-              description: '目标URL',
+              description: 'Target URL',
             },
             timeout: {
               type: 'number',
-              description: '超时时间（毫秒）',
+              description: 'Timeout in milliseconds',
               default: 30000
             },
             waitUntil: {
               type: 'string',
               enum: ['load', 'domcontentloaded', 'networkidle'],
-              description: '等待条件',
+              description: 'Wait condition',
               default: 'load'
             }
           },
@@ -121,13 +121,13 @@ export class BrowserTools {
       },
       {
         name: 'browser_go_back',
-        description: '返回上一页',
+        description: 'Go back to the previous page',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             }
           },
           required: ['instanceId']
@@ -135,13 +135,13 @@ export class BrowserTools {
       },
       {
         name: 'browser_go_forward',
-        description: '前进到下一页',
+        description: 'Go forward to the next page',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             }
           },
           required: ['instanceId']
@@ -149,53 +149,53 @@ export class BrowserTools {
       },
       {
         name: 'browser_refresh',
-        description: '刷新当前页面',
+        description: 'Refresh the current page',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             }
           },
           required: ['instanceId']
         }
       },
 
-      // 页面交互工具
+      // Page interaction tools
       {
         name: 'browser_click',
-        description: '点击页面元素',
+        description: 'Click on a page element',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             selector: {
               type: 'string',
-              description: '元素选择器',
+              description: 'Element selector',
             },
             button: {
               type: 'string',
               enum: ['left', 'right', 'middle'],
-              description: '鼠标按钮',
+              description: 'Mouse button',
               default: 'left'
             },
             clickCount: {
               type: 'number',
-              description: '点击次数',
+              description: 'Number of clicks',
               default: 1
             },
             delay: {
               type: 'number',
-              description: '点击延迟（毫秒）',
+              description: 'Click delay in milliseconds',
               default: 0
             },
             timeout: {
               type: 'number',
-              description: '超时时间（毫秒）',
+              description: 'Timeout in milliseconds',
               default: 30000
             }
           },
@@ -204,30 +204,30 @@ export class BrowserTools {
       },
       {
         name: 'browser_type',
-        description: '在元素中输入文本',
+        description: 'Type text into an element',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             selector: {
               type: 'string',
-              description: '元素选择器',
+              description: 'Element selector',
             },
             text: {
               type: 'string',
-              description: '要输入的文本',
+              description: 'Text to input',
             },
             delay: {
               type: 'number',
-              description: '输入延迟（毫秒）',
+              description: 'Input delay in milliseconds',
               default: 0
             },
             timeout: {
               type: 'number',
-              description: '超时时间（毫秒）',
+              description: 'Timeout in milliseconds',
               default: 30000
             }
           },
@@ -236,25 +236,25 @@ export class BrowserTools {
       },
       {
         name: 'browser_fill',
-        description: '填充表单字段',
+        description: 'Fill a form field',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             selector: {
               type: 'string',
-              description: '元素选择器',
+              description: 'Element selector',
             },
             value: {
               type: 'string',
-              description: '要填充的值',
+              description: 'Value to fill',
             },
             timeout: {
               type: 'number',
-              description: '超时时间（毫秒）',
+              description: 'Timeout in milliseconds',
               default: 30000
             }
           },
@@ -263,25 +263,25 @@ export class BrowserTools {
       },
       {
         name: 'browser_select_option',
-        description: '选择下拉选项',
+        description: 'Select an option from a dropdown',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             selector: {
               type: 'string',
-              description: '元素选择器',
+              description: 'Element selector',
             },
             value: {
               type: 'string',
-              description: '要选择的值',
+              description: 'Value to select',
             },
             timeout: {
               type: 'number',
-              description: '超时时间（毫秒）',
+              description: 'Timeout in milliseconds',
               default: 30000
             }
           },
@@ -289,16 +289,16 @@ export class BrowserTools {
         }
       },
 
-      // 页面信息工具
+      // Page information tools
       {
         name: 'browser_get_page_info',
-        description: '获取页面详细信息，包括完整的HTML内容、页面统计信息和元数据',
+        description: 'Get detailed page information including full HTML content, page statistics, and metadata',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             }
           },
           required: ['instanceId']
@@ -306,21 +306,21 @@ export class BrowserTools {
       },
       {
         name: 'browser_get_element_text',
-        description: '获取元素文本',
+        description: 'Get element text content',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             selector: {
               type: 'string',
-              description: '元素选择器',
+              description: 'Element selector',
             },
             timeout: {
               type: 'number',
-              description: '超时时间（毫秒）',
+              description: 'Timeout in milliseconds',
               default: 30000
             }
           },
@@ -329,25 +329,25 @@ export class BrowserTools {
       },
       {
         name: 'browser_get_element_attribute',
-        description: '获取元素属性',
+        description: 'Get element attribute value',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             selector: {
               type: 'string',
-              description: '元素选择器',
+              description: 'Element selector',
             },
             attribute: {
               type: 'string',
-              description: '属性名称',
+              description: 'Attribute name',
             },
             timeout: {
               type: 'number',
-              description: '超时时间（毫秒）',
+              description: 'Timeout in milliseconds',
               default: 30000
             }
           },
@@ -355,35 +355,35 @@ export class BrowserTools {
         }
       },
 
-      // 截图工具
+      // Screenshot tool
       {
         name: 'browser_screenshot',
-        description: '截取页面截图',
+        description: 'Take a screenshot of the page or element',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             fullPage: {
               type: 'boolean',
-              description: '是否截取整个页面',
+              description: 'Whether to capture the full page',
               default: false
             },
             selector: {
               type: 'string',
-              description: '元素选择器（截取特定元素）'
+              description: 'Element selector (capture specific element)'
             },
             type: {
               type: 'string',
               enum: ['png', 'jpeg'],
-              description: '图片格式',
+              description: 'Image format',
               default: 'png'
             },
             quality: {
               type: 'number',
-              description: '图片质量（1-100，仅jpeg有效）',
+              description: 'Image quality (1-100, JPEG only)',
               minimum: 1,
               maximum: 100,
               default: 80
@@ -393,24 +393,24 @@ export class BrowserTools {
         }
       },
 
-      // 等待工具
+      // Wait tools
       {
         name: 'browser_wait_for_element',
-        description: '等待元素出现',
+        description: 'Wait for an element to appear',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             selector: {
               type: 'string',
-              description: '元素选择器',
+              description: 'Element selector',
             },
             timeout: {
               type: 'number',
-              description: '超时时间（毫秒）',
+              description: 'Timeout in milliseconds',
               default: 30000
             }
           },
@@ -419,17 +419,17 @@ export class BrowserTools {
       },
       {
         name: 'browser_wait_for_navigation',
-        description: '等待页面导航完成',
+        description: 'Wait for page navigation to complete',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             timeout: {
               type: 'number',
-              description: '超时时间（毫秒）',
+              description: 'Timeout in milliseconds',
               default: 30000
             }
           },
@@ -437,50 +437,50 @@ export class BrowserTools {
         }
       },
 
-      // 执行 JavaScript 工具
+      // JavaScript execution tool
       {
         name: 'browser_evaluate',
-        description: '执行 JavaScript 代码',
+        description: 'Execute JavaScript code in the page context',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             script: {
               type: 'string',
-              description: 'JavaScript 代码',
+              description: 'JavaScript code to execute',
             }
           },
           required: ['instanceId', 'script']
         }
       },
 
-      // 内容提取工具
+      // Content extraction tool
       {
         name: 'browser_get_markdown',
-        description: '获取页面内容的Markdown格式表示，对大模型友好',
+        description: 'Get page content in Markdown format, optimized for large language models',
         inputSchema: {
           type: 'object',
           properties: {
             instanceId: {
               type: 'string',
-              description: '实例ID'
+              description: 'Instance ID'
             },
             includeLinks: {
               type: 'boolean',
-              description: '是否包含链接',
+              description: 'Whether to include links',
               default: true
             },
             maxLength: {
               type: 'number',
-              description: '最大内容长度（字符数）',
+              description: 'Maximum content length in characters',
               default: 10000
             },
             selector: {
               type: 'string',
-              description: '可选的CSS选择器，只提取特定元素的内容'
+              description: 'Optional CSS selector to extract content from specific element only'
             }
           },
           required: ['instanceId']
@@ -490,7 +490,7 @@ export class BrowserTools {
   }
 
   /**
-   * 执行工具
+   * Execute tools
    */
   async executeTools(name: string, args: any): Promise<ToolResult> {
     try {
@@ -596,7 +596,7 @@ export class BrowserTools {
     }
   }
 
-  // 实现各个工具的具体方法
+  // Implementation of specific tool methods
   private async navigate(instanceId: string, url: string, options: NavigationOptions): Promise<ToolResult> {
     const instance = this.browserManager.getInstance(instanceId);
     if (!instance) {
@@ -799,11 +799,11 @@ export class BrowserTools {
       const title = await instance.page.title();
       const content = await instance.page.content();
       
-      // 获取额外的页面信息
+      // Get additional page information
       const viewport = instance.page.viewportSize();
       const loadState = await instance.page.evaluate(() => document.readyState);
       
-      // 获取页面的一些基本统计信息
+      // Get basic page statistics
       const pageStats = await instance.page.evaluate(() => {
         const links = document.querySelectorAll('a[href]').length;
         const images = document.querySelectorAll('img').length;
@@ -825,7 +825,7 @@ export class BrowserTools {
         data: { 
           url, 
           title, 
-          content,  // 返回完整的HTML内容
+          content,  // Return complete HTML content
           contentLength: content.length,
           viewport,
           loadState,
@@ -1009,17 +1009,17 @@ export class BrowserTools {
     }
 
     try {
-      // JavaScript函数来提取页面内容并转换为Markdown
+      // JavaScript function to extract page content and convert to Markdown
       const markdownContent = await instance.page.evaluate((opts) => {
         const { includeLinks, maxLength, selector } = opts;
         
-        // 选择要处理的根元素
+        // Select the root element to process
         const rootElement = selector ? document.querySelector(selector) : document.body;
         if (!rootElement) {
-          return '未找到指定的元素或页面内容';
+          return 'Specified element or page content not found';
         }
 
-        // HTML到Markdown转换函数
+        // HTML to Markdown conversion function
         function htmlToMarkdown(element: any, depth = 0) {
           let markdown = '';
           const indent = '  '.repeat(depth);
@@ -1109,11 +1109,11 @@ export class BrowserTools {
                 case 'section':
                 case 'article':
                 case 'main':
-                  // 递归处理容器元素
+                  // Recursively process container elements
                   markdown += htmlToMarkdown(el, depth);
                   break;
                 case 'table':
-                  // 简化表格处理
+                  // Simplified table processing
                   const rows = el.querySelectorAll('tr');
                   if (rows.length > 0) {
                     markdown += '\n\n';

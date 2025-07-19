@@ -1,46 +1,48 @@
-# Concurrent Browser MCP
+# concurrent-browser-mcp
 
-一个支持多并发的浏览器 MCP (Model Context Protocol) 服务器，基于 Playwright 构建。
+A multi-concurrent browser MCP (Model Context Protocol) server built with Playwright.
 
-## 功能特点
+[中文](README.zh.md) | **English**
 
-- 🚀 **多实例并发**: 支持同时运行多个浏览器实例
-- 🎯 **实例管理**: 动态创建、管理和清理浏览器实例
-- 🔧 **灵活配置**: 支持多种浏览器类型和自定义配置
-- 🛡️ **资源管理**: 自动清理超时的实例，防止资源泄漏
-- 🌐 **全功能支持**: 完整的浏览器自动化功能（导航、点击、输入、截图等）
-- 💻 **跨平台**: 支持 Chromium、Firefox、WebKit
+## Features
 
-## 安装
+- 🚀 **Multi-Instance Concurrency**: Support running multiple browser instances simultaneously
+- 🎯 **Instance Management**: Dynamically create, manage, and clean up browser instances  
+- 🔧 **Flexible Configuration**: Support various browser types and custom configurations
+- 🛡️ **Resource Management**: Automatically clean up timed-out instances to prevent resource leaks
+- 🌐 **Full Feature Support**: Complete browser automation capabilities (navigation, clicking, input, screenshots, etc.)
+- 💻 **Cross-Platform**: Support Chromium, Firefox, WebKit
 
-### 方式一：从 npm 安装（推荐）
+## Installation
+
+### Option 1: Install from npm (Recommended)
 
 ```bash
-# 全局安装
+# Global installation
 npm install -g concurrent-browser-mcp
 
-# 或者直接使用 npx（无需安装）
+# Or use npx directly (no installation required)
 npx concurrent-browser-mcp
 ```
 
-### 方式二：从源码构建
+### Option 2: Build from Source
 
 ```bash
-# 克隆仓库
+# Clone repository
 git clone https://github.com/sailaoda/concurrent-browser-mcp.git
 cd concurrent-browser-mcp
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 构建项目
+# Build project
 npm run build
 
-# 可选：全局链接（用于本地开发）
+# Optional: Global link (for local development)
 npm link
 ```
 
-### 方式三：快速安装脚本
+### Option 3: Quick Install Script
 
 ```bash
 git clone https://github.com/sailaoda/concurrent-browser-mcp.git
@@ -48,23 +50,23 @@ cd concurrent-browser-mcp
 ./install.sh
 ```
 
-## 快速开始
+## Quick Start
 
-### 1. 基础用法
+### 1. Basic Usage
 
 ```bash
-# 启动服务器（默认配置）
+# Start server (default configuration)
 npx concurrent-browser-mcp
 
-# 自定义配置
+# Custom configuration
 npx concurrent-browser-mcp --max-instances 25 --browser firefox --headless false
 ```
 
-### 2. MCP 客户端配置
+### 2. MCP Client Configuration
 
-根据您的安装方式选择相应的配置：
+Choose the appropriate configuration based on your installation method:
 
-#### 使用 npm 全局安装或 npx
+#### Using npm global installation or npx
 
 ```json
 {
@@ -77,7 +79,7 @@ npx concurrent-browser-mcp --max-instances 25 --browser firefox --headless false
 }
 ```
 
-#### 使用全局安装版本
+#### Using global installation version
 
 ```json
 {
@@ -90,9 +92,9 @@ npx concurrent-browser-mcp --max-instances 25 --browser firefox --headless false
 }
 ```
 
-#### 使用本地构建版本
+#### Using local build version
 
-如果您从源码构建，可以直接引用本地构建的版本：
+If you built from source, you can reference the local build version directly:
 
 ```json
 {
@@ -106,7 +108,7 @@ npx concurrent-browser-mcp --max-instances 25 --browser firefox --headless false
 }
 ```
 
-或者使用相对路径（如果配置文件和项目在同一目录层级）：
+Or use relative path (if config file and project are in the same directory level):
 
 ```json
 {
@@ -119,9 +121,9 @@ npx concurrent-browser-mcp --max-instances 25 --browser firefox --headless false
 }
 ```
 
-#### 使用 npm link 版本（开发模式）
+#### Using npm link version (development mode)
 
-如果您使用了 `npm link`：
+If you used `npm link`:
 
 ```json
 {
@@ -134,130 +136,129 @@ npx concurrent-browser-mcp --max-instances 25 --browser firefox --headless false
 }
 ```
 
-## 命令行选项
+## Command Line Options
 
-| 选项 | 描述 | 默认值 |
-|------|------|--------|
-| `-m, --max-instances <number>` | 最大实例数 | 20 |
-| `-t, --instance-timeout <number>` | 实例超时时间（分钟） | 30 |
-| `-c, --cleanup-interval <number>` | 清理间隔（分钟） | 5 |
-| `--browser <browser>` | 默认浏览器类型 (chromium/firefox/webkit) | chromium |
-| `--headless` | 默认无头模式 | true |
-| `--width <number>` | 默认视口宽度 | 1280 |
-| `--height <number>` | 默认视口高度 | 720 |
-| `--user-agent <string>` | 默认用户代理 | - |
-| `--ignore-https-errors` | 忽略 HTTPS 错误 | false |
-| `--bypass-csp` | 绕过 CSP | false |
+| Option | Description | Default |
+|--------|-------------|---------|
+| `-m, --max-instances <number>` | Maximum number of instances | 20 |
+| `-t, --instance-timeout <number>` | Instance timeout in minutes | 30 |
+| `-c, --cleanup-interval <number>` | Cleanup interval in minutes | 5 |
+| `--browser <browser>` | Default browser type (chromium/firefox/webkit) | chromium |
+| `--headless` | Default headless mode | true |
+| `--width <number>` | Default viewport width | 1280 |
+| `--height <number>` | Default viewport height | 720 |
+| `--user-agent <string>` | Default user agent | - |
+| `--ignore-https-errors` | Ignore HTTPS errors | false |
+| `--bypass-csp` | Bypass CSP | false |
 
-## 可用工具
+## Available Tools
 
-![工具分类图](./assets/tools.png)
+![Tool Classification](./assets/tools.png)
 
-### 实例管理
+### Instance Management
 
-- `browser_create_instance`: 创建新的浏览器实例
-- `browser_list_instances`: 列出所有实例
-- `browser_close_instance`: 关闭指定实例
-- `browser_close_all_instances`: 关闭所有实例
+- `browser_create_instance`: Create a new browser instance
+- `browser_list_instances`: List all instances
+- `browser_close_instance`: Close a specific instance
+- `browser_close_all_instances`: Close all instances
 
-### 页面导航
+### Page Navigation
 
-- `browser_navigate`: 导航到指定URL
-- `browser_go_back`: 返回上一页
-- `browser_go_forward`: 前进到下一页
-- `browser_refresh`: 刷新当前页面
+- `browser_navigate`: Navigate to a specified URL
+- `browser_go_back`: Go back to previous page
+- `browser_go_forward`: Go forward to next page
+- `browser_refresh`: Refresh current page
 
-### 页面交互
+### Page Interaction
 
-- `browser_click`: 点击页面元素
-- `browser_type`: 在元素中输入文本
-- `browser_fill`: 填充表单字段
-- `browser_select_option`: 选择下拉选项
+- `browser_click`: Click on page elements
+- `browser_type`: Type text content
+- `browser_fill`: Fill form fields
+- `browser_select_option`: Select dropdown options
 
-### 页面信息
+### Page Information
 
-- `browser_get_page_info`: 获取页面信息
-- `browser_get_element_text`: 获取元素文本
-- `browser_get_element_attribute`: 获取元素属性
-- `browser_screenshot`: 截取页面截图
-- `browser_get_markdown`: 获取Markdown内容
+- `browser_get_page_info`: Get detailed page information including full HTML content, page statistics, and metadata
+- `browser_get_element_text`: Get element text
+- `browser_get_element_attribute`: Get element attributes
+- `browser_screenshot`: Take page screenshots
+- `browser_get_markdown`: 🆕 Get Markdown content
 
-### 等待操作
+### Wait Operations
 
-- `browser_wait_for_element`: 等待元素出现
-- `browser_wait_for_navigation`: 等待页面导航完成
+- `browser_wait_for_element`: Wait for element to appear
+- `browser_wait_for_navigation`: Wait for page navigation to complete
 
-### JavaScript 执行
+### JavaScript Execution
 
-- `browser_evaluate`: 执行 JavaScript 代码
+- `browser_evaluate`: Execute JavaScript code
 
-## 使用示例
+## Usage Examples
 
-### 1. 创建浏览器实例
+### 1. Create Browser Instance
 
 ```javascript
-// 创建一个新的 Chrome 实例
+// Create a new Chrome instance
 await callTool('browser_create_instance', {
   browserType: 'chromium',
   headless: false,
   viewport: { width: 1920, height: 1080 },
   metadata: {
     name: 'main-browser',
-    description: '主要浏览器实例'
+    description: 'Main browser instance'
   }
 });
 ```
 
-### 2. 导航和交互
+### 2. Navigation and Interaction
 
 ```javascript
-// 导航到网站
+// Navigate to website
 await callTool('browser_navigate', {
   instanceId: 'your-instance-id',
   url: 'https://example.com'
 });
 
-// 点击按钮
+// Click element
 await callTool('browser_click', {
   instanceId: 'your-instance-id',
-  selector: '#submit-button'
+  selector: 'button.submit'
 });
 
-// 输入文本
+// Input text
 await callTool('browser_type', {
   instanceId: 'your-instance-id',
-  selector: '#username',
-  text: 'myusername'
+  selector: 'input[name="search"]',
+  text: 'search query'
 });
 ```
 
-### 3. 截图和信息获取
+### 3. Get Page Information
 
 ```javascript
-// 截取页面截图
+// Take screenshot
 await callTool('browser_screenshot', {
   instanceId: 'your-instance-id',
-  fullPage: true,
-  type: 'png'
+  fullPage: true
 });
 
-// 获取页面信息
+// Get page information
 await callTool('browser_get_page_info', {
   instanceId: 'your-instance-id'
 });
 ```
 
-### 4. 并发操作
+### 4. Concurrent Operations
 
 ```javascript
-// 创建多个实例并行处理
+// Create multiple instances for parallel processing
 const instances = await Promise.all([
   callTool('browser_create_instance', { metadata: { name: 'worker-1' } }),
   callTool('browser_create_instance', { metadata: { name: 'worker-2' } }),
   callTool('browser_create_instance', { metadata: { name: 'worker-3' } })
 ]);
 
-// 并行导航到不同的页面
+// Navigate to different pages in parallel
 await Promise.all(instances.map(async (instance, index) => {
   await callTool('browser_navigate', {
     instanceId: instance.data.instanceId,
@@ -266,7 +267,7 @@ await Promise.all(instances.map(async (instance, index) => {
 }));
 ```
 
-## 架构设计
+## Architecture Design
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -289,137 +290,137 @@ await Promise.all(instances.map(async (instance, index) => {
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## 真实功能测试
+## Real Functionality Testing
 
-除了模拟演示脚本，我们还提供了真实的浏览器功能测试脚本，让您可以看到实际的截图效果：
+In addition to simulation demo scripts, we also provide real browser functionality test scripts that let you see actual screenshot results:
 
-### 🧪 运行真实测试
+### 🧪 Run Real Tests
 
 ```bash
-# 运行真实浏览器截图测试
+# Run real browser screenshot test
 node test-real-screenshot.js
 ```
 
-这个测试脚本会：
+This test script will:
 
-1. **启动真实浏览器**: 使用 Chromium 引擎
-2. **访问网站**: 导航到 example.com 和 github.com
-3. **截图保存**: 生成真实的 PNG 截图文件
-4. **文件输出**: 在当前目录生成截图文件
+1. **Start real browser**: Using Chromium engine
+2. **Visit websites**: Navigate to example.com and github.com
+3. **Save screenshots**: Generate real PNG screenshot files
+4. **File output**: Generate screenshot files in current directory
 
-### 📸 测试输出示例
+### 📸 Test Output Example
 
 ```
-🚀 启动真实浏览器截图测试...
-✅ 浏览器已启动
-✅ 页面已创建
-🌐 正在导航到 https://example.com...
-✅ 页面加载完成
-📸 正在截图并保存为 screenshot-2025-07-19T11-04-18-660Z.png...
-✅ 截图已保存: screenshot-2025-07-19T11-04-18-660Z.png
-📊 文件大小: 23.57 KB
-📂 文件位置: /path/to/screenshot-2025-07-19T11-04-18-660Z.png
-🌐 正在访问 https://github.com...
-✅ github 截图已保存: screenshot-github-2025-07-19T11-04-18-660Z.png (265.99 KB)
-🛑 浏览器已关闭
+🚀 Starting real browser screenshot test...
+✅ Browser started
+✅ Page created
+🌐 Navigating to https://example.com...
+✅ Page loaded successfully
+📸 Taking screenshot and saving as screenshot-2025-07-19T11-04-18-660Z.png...
+✅ Screenshot saved: screenshot-2025-07-19T11-04-18-660Z.png
+📊 File size: 23.57 KB
+📂 File location: /path/to/screenshot-2025-07-19T11-04-18-660Z.png
+🌐 Visiting https://github.com...
+✅ github screenshot saved: screenshot-github-2025-07-19T11-04-18-660Z.png (265.99 KB)
+🛑 Browser closed
 ```
 
-### 🖼️ 查看截图文件
+### 🖼️ View Screenshot Files
 
-测试完成后，您可以在项目目录中找到实际的截图文件：
+After testing, you can find actual screenshot files in the project directory:
 
 ```bash
-# 查看生成的截图文件
+# View generated screenshot files
 ls -la screenshot-*.png
 
-# 在系统默认图片查看器中打开
+# Open in system default image viewer
 open screenshot-*.png    # macOS
 start screenshot-*.png   # Windows
 xdg-open screenshot-*.png # Linux
 ```
 
-## 与传统 MCP 浏览器服务器的区别
+## Differences from Traditional MCP Browser Servers
 
-| 特性 | 传统 MCP 浏览器服务器 | Concurrent Browser MCP |
-|------|---------------------|----------------------|
-| 实例管理 | 单实例 | 多实例并发 |
-| 资源隔离 | 无 | 完全隔离 |
-| 并发处理 | 串行 | 并行 |
-| 实例生命周期 | 手动管理 | 自动管理 |
-| 资源清理 | 手动 | 自动 |
-| 可扩展性 | 有限 | 高度可扩展 |
+| Feature | Traditional MCP Browser Server | Concurrent Browser MCP |
+|---------|-------------------------------|----------------------|
+| Instance Management | Single instance | Multi-instance concurrency |
+| Resource Isolation | None | Complete isolation |
+| Concurrent Processing | Serial | Parallel |
+| Instance Lifecycle | Manual management | Automatic management |
+| Resource Cleanup | Manual | Automatic |
+| Scalability | Limited | Highly scalable |
 
-## 开发指南
+## Development Guide
 
-### 本地开发环境搭建
+### Local Development Environment Setup
 
 ```bash
-# 1. 克隆项目
+# 1. Clone project
 git clone https://github.com/sailaoda/concurrent-browser-mcp.git
 cd concurrent-browser-mcp
 
-# 2. 安装依赖
+# 2. Install dependencies
 npm install
 
-# 3. 构建项目
+# 3. Build project
 npm run build
 
-# 4. 本地链接（可选，用于全局命令测试）
+# 4. Local link (optional, for global command testing)
 npm link
 ```
 
-### 可用的 npm 脚本
+### Available npm Scripts
 
 ```bash
-# 构建 TypeScript 项目
+# Build TypeScript project
 npm run build
 
-# 开发模式（文件监听）
+# Development mode (file watching)
 npm run dev
 
-# 运行代码检查
+# Run code linting
 npm run lint
 
-# 修复代码格式问题
+# Fix code formatting issues
 npm run lint:fix
 
-# 清理构建产物
+# Clean build artifacts
 npm run clean
 
-# 运行测试
+# Run tests
 npm test
 ```
 
-### 项目结构
+### Project Structure
 
 ```
 concurrent-browser-mcp/
-├── src/                    # 源代码目录
-│   ├── index.ts           # CLI 入口
-│   ├── server.ts          # MCP 服务器主逻辑
-│   ├── browser-manager.ts # 浏览器实例管理器
-│   └── tools.ts           # MCP 工具定义和实现
-├── dist/                  # 构建产物目录
-├── assets/                # 静态资源目录
-├── examples/              # 示例脚本
-├── test-real-screenshot.js # 真实测试脚本
-├── config.example.json    # 配置示例
-├── package.json           # 项目配置
-├── tsconfig.json         # TypeScript 配置
-└── README.md             # 项目文档
+├── src/                    # Source code directory
+│   ├── index.ts           # CLI entry point
+│   ├── server.ts          # MCP server main logic
+│   ├── browser-manager.ts # Browser instance manager
+│   └── tools.ts           # MCP tool definitions and implementation
+├── dist/                  # Build artifacts directory
+├── assets/                # Static resources directory
+├── examples/              # Example scripts
+├── test-real-screenshot.js # Real test script
+├── config.example.json    # Configuration example
+├── package.json           # Project configuration
+├── tsconfig.json         # TypeScript configuration
+└── README.md             # Project documentation
 ```
 
-### 使用本地构建版本
+### Using Local Build Version
 
-构建完成后，您可以通过以下几种方式使用本地版本：
+After building, you can use the local version in several ways:
 
-#### 方式一：直接运行构建文件
+#### Option 1: Run build files directly
 
 ```bash
-# 运行构建后的文件
+# Run built files
 node dist/index.js --max-instances 20
 
-# 在 MCP 配置中使用绝对路径
+# Use absolute path in MCP configuration
 {
   "mcpServers": {
     "concurrent-browser": {
@@ -430,16 +431,16 @@ node dist/index.js --max-instances 20
 }
 ```
 
-#### 方式二：使用 npm link（推荐开发使用）
+#### Option 2: Use npm link (recommended for development)
 
 ```bash
-# 在项目根目录执行链接
+# Execute link in project root directory
 npm link
 
-# 现在可以像全局包一样使用
+# Now you can use it like a global package
 concurrent-browser-mcp --max-instances 20
 
-# 在 MCP 配置中使用
+# Use in MCP configuration
 {
   "mcpServers": {
     "concurrent-browser": {
@@ -450,15 +451,15 @@ concurrent-browser-mcp --max-instances 20
 }
 ```
 
-#### 方式三：在项目目录中使用
+#### Option 3: Use in project directory
 
 ```bash
-# 在项目目录中直接运行
+# Run directly in project directory
 cd /path/to/concurrent-browser-mcp
 npm run build
 node dist/index.js
 
-# MCP 配置使用相对路径
+# MCP configuration using relative path
 {
   "mcpServers": {
     "concurrent-browser": {
@@ -470,23 +471,23 @@ node dist/index.js
 }
 ```
 
-### 测试和调试
+### Testing and Debugging
 
 ```bash
-# 运行真实浏览器测试
+# Run real browser tests
 node test-real-screenshot.js
 
-# 运行模拟 MCP 调用测试
+# Run simulated MCP call tests
 node examples/demo.js
 
-# 启动开发服务器（带调试输出）
+# Start development server (with debug output)
 node dist/index.js --max-instances 5 --browser chromium --headless false
 ```
 
-### 贡献指南
+### Contributing Guidelines
 
-1. Fork 本项目
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 开启 Pull Request
+1. Fork this project
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add some amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request 
