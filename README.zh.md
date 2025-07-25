@@ -148,8 +148,86 @@ npx concurrent-browser-mcp --max-instances 25 --browser firefox --headless false
 | `--width <number>` | 默认视口宽度 | 1280 |
 | `--height <number>` | 默认视口高度 | 720 |
 | `--user-agent <string>` | 默认用户代理 | - |
+| `--proxy <string>` | 代理服务器地址 (例如: http://127.0.0.1:7890) | - |
+| `--no-proxy-auto-detect` | 禁用代理自动检测 | false |
 | `--ignore-https-errors` | 忽略 HTTPS 错误 | false |
 | `--bypass-csp` | 绕过 CSP | false |
+
+## 代理配置
+
+concurrent-browser-mcp 支持灵活的代理配置，帮助您在需要代理的网络环境中正常使用浏览器自动化功能。
+
+### 代理配置方式
+
+#### 1. 命令行指定代理
+```bash
+# 使用指定的代理服务器
+npx concurrent-browser-mcp --proxy http://127.0.0.1:7890
+```
+
+#### 2. 自动检测本地代理（默认启用）
+系统会自动按以下顺序检测代理：
+- **环境变量**: `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY`
+- **常见代理端口**: 7890, 1087, 8080, 3128, 8888, 10809, 20171
+- **系统代理设置** (macOS): 自动读取系统网络设置
+
+```bash
+# 默认启用自动检测（无需额外参数）
+npx concurrent-browser-mcp
+
+# 明确禁用自动检测
+npx concurrent-browser-mcp --no-proxy-auto-detect
+```
+
+#### 3. MCP 配置文件中的代理设置
+
+**使用指定代理：**
+```json
+{
+  "mcpServers": {
+    "concurrent-browser": {
+      "command": "npx",
+      "args": ["concurrent-browser-mcp", "--proxy", "http://127.0.0.1:7890"]
+    }
+  }
+}
+```
+
+**禁用代理：**
+```json
+{
+  "mcpServers": {
+    "concurrent-browser": {
+      "command": "npx", 
+      "args": ["concurrent-browser-mcp", "--no-proxy-auto-detect"]
+    }
+  }
+}
+```
+
+### 代理检测日志
+启动时会显示代理检测结果：
+```
+🚀 Starting Concurrent Browser MCP Server...
+Max instances: 20
+Default browser: chromium
+Headless mode: yes
+Viewport size: 1280x720
+Instance timeout: 30 minutes
+Cleanup interval: 5 minutes
+Proxy: Auto-detection enabled  # 或显示检测到的代理地址
+```
+
+### 支持的代理类型
+- HTTP 代理：`http://proxy-server:port`
+- HTTPS 代理：`https://proxy-server:port`
+- SOCKS5 代理：`socks5://proxy-server:port`
+
+### 注意事项
+- 代理配置会应用到所有创建的浏览器实例
+- 不支持需要用户名密码认证的代理
+- 可以通过环境变量设置代理，无需手动配置
+- 代理检测会在服务启动时自动完成，不影响运行性能
 
 ## 可用工具
 

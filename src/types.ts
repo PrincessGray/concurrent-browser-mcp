@@ -15,6 +15,11 @@ export interface BrowserInstance {
   };
 }
 
+export interface ProxyConfig {
+  server?: string; // e.g., 'http://127.0.0.1:7890'
+  autoDetect?: boolean; // Whether to auto-detect local proxy, defaults to true
+}
+
 export interface BrowserConfig {
   browserType: 'chromium' | 'firefox' | 'webkit';
   headless?: boolean;
@@ -23,6 +28,7 @@ export interface BrowserConfig {
     height: number;
   };
   userAgent?: string;
+  proxy?: ProxyConfig;
   contextOptions?: {
     ignoreHTTPSErrors?: boolean;
     bypassCSP?: boolean;
@@ -35,6 +41,7 @@ export interface ServerConfig {
   defaultBrowserConfig: BrowserConfig;
   instanceTimeout: number; // in milliseconds
   cleanupInterval: number; // in milliseconds
+  proxy?: ProxyConfig; // Global proxy configuration
 }
 
 export interface ToolResult {

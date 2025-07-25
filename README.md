@@ -148,8 +148,86 @@ If you used `npm link`:
 | `--width <number>` | Default viewport width | 1280 |
 | `--height <number>` | Default viewport height | 720 |
 | `--user-agent <string>` | Default user agent | - |
+| `--proxy <string>` | Proxy server address (e.g., http://127.0.0.1:7890) | - |
+| `--no-proxy-auto-detect` | Disable automatic proxy detection | false |
 | `--ignore-https-errors` | Ignore HTTPS errors | false |
 | `--bypass-csp` | Bypass CSP | false |
+
+## Proxy Configuration
+
+concurrent-browser-mcp supports flexible proxy configuration to help you use browser automation features in network environments that require proxies.
+
+### Proxy Configuration Methods
+
+#### 1. Specify Proxy via Command Line
+```bash
+# Use specified proxy server
+npx concurrent-browser-mcp --proxy http://127.0.0.1:7890
+```
+
+#### 2. Automatic Local Proxy Detection (Enabled by Default)
+The system automatically detects proxies in the following order:
+- **Environment Variables**: `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY`
+- **Common Proxy Ports**: 7890, 1087, 8080, 3128, 8888, 10809, 20171
+- **System Proxy Settings** (macOS): Automatically reads system network settings
+
+```bash
+# Auto-detection enabled by default (no additional parameters needed)
+npx concurrent-browser-mcp
+
+# Explicitly disable auto-detection
+npx concurrent-browser-mcp --no-proxy-auto-detect
+```
+
+#### 3. Proxy Settings in MCP Configuration File
+
+**Using specified proxy:**
+```json
+{
+  "mcpServers": {
+    "concurrent-browser": {
+      "command": "npx",
+      "args": ["concurrent-browser-mcp", "--proxy", "http://127.0.0.1:7890"]
+    }
+  }
+}
+```
+
+**Disable proxy:**
+```json
+{
+  "mcpServers": {
+    "concurrent-browser": {
+      "command": "npx", 
+      "args": ["concurrent-browser-mcp", "--no-proxy-auto-detect"]
+    }
+  }
+}
+```
+
+### Proxy Detection Logs
+The proxy detection results will be displayed at startup:
+```
+🚀 Starting Concurrent Browser MCP Server...
+Max instances: 20
+Default browser: chromium
+Headless mode: yes
+Viewport size: 1280x720
+Instance timeout: 30 minutes
+Cleanup interval: 5 minutes
+Proxy: Auto-detection enabled  # or shows detected proxy address
+```
+
+### Supported Proxy Types
+- HTTP proxy: `http://proxy-server:port`
+- HTTPS proxy: `https://proxy-server:port`
+- SOCKS5 proxy: `socks5://proxy-server:port`
+
+### Notes
+- Proxy configuration applies to all created browser instances
+- Authentication with username/password is not supported
+- Proxy can be set via environment variables without manual configuration
+- Proxy detection is completed automatically at service startup without affecting runtime performance
 
 ## Available Tools
 

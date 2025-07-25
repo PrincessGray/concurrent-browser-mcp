@@ -120,4 +120,7 @@ export const defaultConfig: ServerConfig = {
   },
   instanceTimeout: 30 * 60 * 1000, // 30 minutes
   cleanupInterval: 5 * 60 * 1000, // 5 minutes
+  proxy: {
+    autoDetect: true, // Enable proxy auto-detection by default
+  },
 }; 
