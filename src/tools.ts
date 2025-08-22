@@ -11,12 +11,9 @@ import {
 export class BrowserTools {
   constructor(private browserManager: BrowserManager) {}
 
-  /**
-   * Get all tool definitions
-   */
-  getTools(): Tool[] {
+  getTools() :Tool[] {
     return [
-      // Instance management tools
+      // 1. 实例创建
       {
         name: 'browser_create_instance',
         description: 'Create a new browser instance',
@@ -58,437 +55,171 @@ export class BrowserTools {
           }
         }
       },
+      // 2. 实例管理
       {
-        name: 'browser_list_instances',
-        description: 'List all browser instances',
-        inputSchema: {
-          type: 'object',
-          properties: {}
-        }
-      },
-      {
-        name: 'browser_close_instance',
-        description: 'Close the specified browser instance',
+        name: 'browser_manage_instance',
+        description: 'Manage browser instances',
         inputSchema: {
           type: 'object',
           properties: {
-            instanceId: {
+            action: {
               type: 'string',
-              description: 'Instance ID'
-            }
+              enum: ['list_instances', 'close_instance', 'close_all_instances'],
+              description: 'Instance management action. "close_instance" requires instanceId; "list_instances" and "close_all_instances" require no additional parameters.'
+            },
+            instanceId: { type: 'string' }
           },
-          required: ['instanceId']
-        }
-      },
-      {
-        name: 'browser_close_all_instances',
-        description: 'Close all browser instances',
-        inputSchema: {
-          type: 'object',
-          properties: {}
+          required: ['action']
         }
       },
 
-      // Navigation tools
+      // 3. 页面导航
       {
         name: 'browser_navigate',
-        description: 'Navigate to a specified URL',
+        description: 'Navigate browser pages',
         inputSchema: {
           type: 'object',
           properties: {
-            instanceId: {
+            action: {
               type: 'string',
-              description: 'Instance ID'
+              enum: ['navigate', 'go_back', 'go_forward', 'refresh'],
+              description: 'Navigation action. "navigate" requires instanceId and url; "go_back", "go_forward", and "refresh" require instanceId.'
             },
-            url: {
-              type: 'string',
-              description: 'Target URL',
-            },
-            timeout: {
-              type: 'number',
-              description: 'Timeout in milliseconds',
-              default: 30000
-            },
-            waitUntil: {
-              type: 'string',
-              enum: ['load', 'domcontentloaded', 'networkidle'],
-              description: 'Wait condition',
-              default: 'load'
-            }
+            instanceId: { type: 'string' },
+            url: { type: 'string' },
+            timeout: { type: 'number', default: 30000 },
+            waitUntil: { type: 'string', enum: ['load', 'domcontentloaded', 'networkidle'], default: 'load' }
           },
-          required: ['instanceId', 'url']
-        }
-      },
-      {
-        name: 'browser_go_back',
-        description: 'Go back to the previous page',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
-            }
-          },
-          required: ['instanceId']
-        }
-      },
-      {
-        name: 'browser_go_forward',
-        description: 'Go forward to the next page',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
-            }
-          },
-          required: ['instanceId']
-        }
-      },
-      {
-        name: 'browser_refresh',
-        description: 'Refresh the current page',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
-            }
-          },
-          required: ['instanceId']
+          required: ['action']
         }
       },
 
-      // Page interaction tools
+      // 4. 页面交互
       {
-        name: 'browser_click',
-        description: 'Click on a page element',
+        name: 'browser_interaction',
+        description: 'Interact with page elements',
         inputSchema: {
           type: 'object',
           properties: {
+            action: {
+              type: 'string',
+              enum: ['click', 'type', 'fill', 'select_option'],
+              description: 'Page interaction action. "click" requires instanceId and selector; "type" requires instanceId, selector, and text; "fill" requires instanceId, selector, and value; "select_option" requires instanceId, selector, and value.'
+            },
             instanceId: {
               type: 'string',
-              description: 'Instance ID'
             },
             selector: {
               type: 'string',
-              description: 'Element selector',
+              description: 'Element selector'
+            },
+            text: {
+              type: 'string',
+              description: 'Text to input (for type action)'
+            },
+            value: {
+              type: 'string',
+              description: 'Value to fill or select (for fill/select_option action)'
             },
             button: {
               type: 'string',
               enum: ['left', 'right', 'middle'],
-              description: 'Mouse button',
-              default: 'left'
+              default: 'left',
+              description: 'Mouse button (for click action)'
             },
             clickCount: {
               type: 'number',
-              description: 'Number of clicks',
-              default: 1
+              default: 1,
+              description: 'Number of clicks (for click action)'
             },
             delay: {
               type: 'number',
-              description: 'Click delay in milliseconds',
-              default: 0
+              default: 0,
+              description: 'Delay in milliseconds before action'
             },
             timeout: {
               type: 'number',
-              description: 'Timeout in milliseconds',
-              default: 30000
+              default: 30000,
+              description: 'Timeout in milliseconds'
             }
           },
-          required: ['instanceId', 'selector']
-        }
-      },
-      {
-        name: 'browser_type',
-        description: 'Type text into an element',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
-            },
-            selector: {
-              type: 'string',
-              description: 'Element selector',
-            },
-            text: {
-              type: 'string',
-              description: 'Text to input',
-            },
-            delay: {
-              type: 'number',
-              description: 'Input delay in milliseconds',
-              default: 0
-            },
-            timeout: {
-              type: 'number',
-              description: 'Timeout in milliseconds',
-              default: 30000
-            }
-          },
-          required: ['instanceId', 'selector', 'text']
-        }
-      },
-      {
-        name: 'browser_fill',
-        description: 'Fill a form field',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
-            },
-            selector: {
-              type: 'string',
-              description: 'Element selector',
-            },
-            value: {
-              type: 'string',
-              description: 'Value to fill',
-            },
-            timeout: {
-              type: 'number',
-              description: 'Timeout in milliseconds',
-              default: 30000
-            }
-          },
-          required: ['instanceId', 'selector', 'value']
-        }
-      },
-      {
-        name: 'browser_select_option',
-        description: 'Select an option from a dropdown',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
-            },
-            selector: {
-              type: 'string',
-              description: 'Element selector',
-            },
-            value: {
-              type: 'string',
-              description: 'Value to select',
-            },
-            timeout: {
-              type: 'number',
-              description: 'Timeout in milliseconds',
-              default: 30000
-            }
-          },
-          required: ['instanceId', 'selector', 'value']
+          required: ['action']
         }
       },
 
-      // Page information tools
+      // 5. 内容与信息提取
       {
-        name: 'browser_get_page_info',
-        description: 'Get detailed page information including full HTML content, page statistics, and metadata',
+        name: 'browser_content',
+        description: 'Extract page information and content',
         inputSchema: {
           type: 'object',
           properties: {
+            action: {
+              type: 'string',
+              enum: [
+                'get_page_info',
+                'get_element_text',
+                'get_element_attribute',
+                'screenshot',
+                'wait_for_element',
+                'wait_for_navigation',
+                'evaluate',
+                'get_markdown'
+              ],
+              description: 'Content extraction action. Required parameters: get_page_info requires instanceId; get_element_text requires instanceId and selector; get_element_attribute requires instanceId, selector, and attribute; screenshot requires instanceId; wait_for_element requires instanceId and selector; wait_for_navigation requires instanceId; evaluate requires instanceId and script; get_markdown requires instanceId.'
+            },
             instanceId: {
               type: 'string',
-              description: 'Instance ID'
-            }
-          },
-          required: ['instanceId']
-        }
-      },
-      {
-        name: 'browser_get_element_text',
-        description: 'Get element text content',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
             },
             selector: {
               type: 'string',
-              description: 'Element selector',
-            },
-            timeout: {
-              type: 'number',
-              description: 'Timeout in milliseconds',
-              default: 30000
-            }
-          },
-          required: ['instanceId', 'selector']
-        }
-      },
-      {
-        name: 'browser_get_element_attribute',
-        description: 'Get element attribute value',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
-            },
-            selector: {
-              type: 'string',
-              description: 'Element selector',
+              description: 'Element selector'
             },
             attribute: {
               type: 'string',
-              description: 'Attribute name',
+              description: 'Attribute name (for get_element_attribute action)'
             },
             timeout: {
               type: 'number',
-              description: 'Timeout in milliseconds',
-              default: 30000
-            }
-          },
-          required: ['instanceId', 'selector', 'attribute']
-        }
-      },
-
-      // Screenshot tool
-      {
-        name: 'browser_screenshot',
-        description: 'Take a screenshot of the page or element',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
+              default: 30000,
+              description: 'Timeout in milliseconds'
             },
             fullPage: {
               type: 'boolean',
-              description: 'Whether to capture the full page',
-              default: false
-            },
-            selector: {
-              type: 'string',
-              description: 'Element selector (capture specific element)'
+              default: false,
+              description: 'Whether to capture the full page (for screenshot action)'
             },
             type: {
               type: 'string',
               enum: ['png', 'jpeg'],
-              description: 'Image format',
-              default: 'png'
+              default: 'png',
+              description: 'Image format (for screenshot action)'
             },
             quality: {
               type: 'number',
-              description: 'Image quality (1-100, JPEG only)',
-              minimum: 1,
-              maximum: 100,
-              default: 80
-            }
-          },
-          required: ['instanceId']
-        }
-      },
-
-      // Wait tools
-      {
-        name: 'browser_wait_for_element',
-        description: 'Wait for an element to appear',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
-            },
-            selector: {
-              type: 'string',
-              description: 'Element selector',
-            },
-            timeout: {
-              type: 'number',
-              description: 'Timeout in milliseconds',
-              default: 30000
-            }
-          },
-          required: ['instanceId', 'selector']
-        }
-      },
-      {
-        name: 'browser_wait_for_navigation',
-        description: 'Wait for page navigation to complete',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
-            },
-            timeout: {
-              type: 'number',
-              description: 'Timeout in milliseconds',
-              default: 30000
-            }
-          },
-          required: ['instanceId']
-        }
-      },
-
-      // JavaScript execution tool
-      {
-        name: 'browser_evaluate',
-        description: 'Execute JavaScript code in the page context',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
+              default: 80,
+              description: 'Image quality (1-100, JPEG only, for screenshot action)'
             },
             script: {
               type: 'string',
-              description: 'JavaScript code to execute',
-            }
-          },
-          required: ['instanceId', 'script']
-        }
-      },
-
-      // Content extraction tool
-      {
-        name: 'browser_get_markdown',
-        description: 'Get page content in Markdown format, optimized for large language models',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            instanceId: {
-              type: 'string',
-              description: 'Instance ID'
+              description: 'JavaScript code to execute (for evaluate action)'
             },
             includeLinks: {
               type: 'boolean',
-              description: 'Whether to include links',
-              default: true
+              default: true,
+              description: 'Whether to include links (for get_markdown action)'
             },
             maxLength: {
               type: 'number',
-              description: 'Maximum content length in characters',
-              default: 10000
-            },
-            selector: {
-              type: 'string',
-              description: 'Optional CSS selector to extract content from specific element only'
+              default: 10000,
+              description: 'Maximum content length in characters (for get_markdown action)'
             }
           },
-          required: ['instanceId']
+          required: ['action']
         }
       }
     ];
   }
-
   /**
    * Execute tools
    */
@@ -505,88 +236,89 @@ export class BrowserTools {
             },
             args.metadata
           );
-
-        case 'browser_list_instances':
-          return this.browserManager.listInstances();
-
-        case 'browser_close_instance':
-          return await this.browserManager.closeInstance(args.instanceId);
-
-        case 'browser_close_all_instances':
-          return await this.browserManager.closeAllInstances();
+        case 'browser_manage_instance':
+          switch (args.action) {
+            case 'list_instances':
+              return this.browserManager.listInstances();
+            case 'close_instance':
+              return await this.browserManager.closeInstance(args.instanceId);
+            case 'close_all_instances':
+              return await this.browserManager.closeAllInstances();
+            default:
+              return { success: false, error: `Unknown action: ${args.action}` };
+          }
 
         case 'browser_navigate':
-          return await this.navigate(args.instanceId, args.url, {
-            timeout: args.timeout || 30000,
-            waitUntil: args.waitUntil || 'load'
-          });
+          switch (args.action) {
+            case 'navigate':
+              return await this.navigate(args.instanceId, args.url, {
+                timeout: args.timeout || 30000,
+                waitUntil: args.waitUntil || 'load'
+              });
+            case 'go_back':
+              return await this.goBack(args.instanceId);
+            case 'go_forward':
+              return await this.goForward(args.instanceId);
+            case 'refresh':
+              return await this.refresh(args.instanceId);
+            default:
+              return { success: false, error: `Unknown action: ${args.action}` };
+          }
 
-        case 'browser_go_back':
-          return await this.goBack(args.instanceId);
+        case 'browser_interaction':
+          switch (args.action) {
+            case 'click':
+              return await this.click(args.instanceId, args.selector, {
+                button: args.button || 'left',
+                clickCount: args.clickCount || 1,
+                delay: args.delay || 0,
+                timeout: args.timeout || 30000
+              });
+            case 'type':
+              return await this.type(args.instanceId, args.selector, args.text, {
+                delay: args.delay || 0,
+                timeout: args.timeout || 30000
+              });
+            case 'fill':
+              return await this.fill(args.instanceId, args.selector, args.value, args.timeout || 30000);
+            case 'select_option':
+              return await this.selectOption(args.instanceId, args.selector, args.value, args.timeout || 30000);
+            default:
+              return { success: false, error: `Unknown action: ${args.action}` };
+          }
 
-        case 'browser_go_forward':
-          return await this.goForward(args.instanceId);
-
-        case 'browser_refresh':
-          return await this.refresh(args.instanceId);
-
-        case 'browser_click':
-          return await this.click(args.instanceId, args.selector, {
-            button: args.button || 'left',
-            clickCount: args.clickCount || 1,
-            delay: args.delay || 0,
-            timeout: args.timeout || 30000
-          });
-
-        case 'browser_type':
-          return await this.type(args.instanceId, args.selector, args.text, {
-            delay: args.delay || 0,
-            timeout: args.timeout || 30000
-          });
-
-        case 'browser_fill':
-          return await this.fill(args.instanceId, args.selector, args.value, args.timeout || 30000);
-
-        case 'browser_select_option':
-          return await this.selectOption(args.instanceId, args.selector, args.value, args.timeout || 30000);
-
-        case 'browser_get_page_info':
-          return await this.getPageInfo(args.instanceId);
-
-        case 'browser_get_element_text':
-          return await this.getElementText(args.instanceId, args.selector, args.timeout || 30000);
-
-        case 'browser_get_element_attribute':
-          return await this.getElementAttribute(args.instanceId, args.selector, args.attribute, args.timeout || 30000);
-
-        case 'browser_screenshot':
-          return await this.screenshot(args.instanceId, {
-            fullPage: args.fullPage || false,
-            type: args.type || 'png',
-            quality: args.quality || 80
-          }, args.selector);
-
-        case 'browser_wait_for_element':
-          return await this.waitForElement(args.instanceId, args.selector, args.timeout || 30000);
-
-        case 'browser_wait_for_navigation':
-          return await this.waitForNavigation(args.instanceId, args.timeout || 30000);
-
-        case 'browser_evaluate':
-          return await this.evaluate(args.instanceId, args.script);
-
-        case 'browser_get_markdown':
-          return await this.getMarkdown(args.instanceId, {
-            includeLinks: args.includeLinks ?? true,
-            maxLength: args.maxLength || 10000,
-            selector: args.selector
-          });
+          case 'browser_content':
+          switch (args.action) {
+            case 'get_page_info':
+              return await this.getPageInfo(args.instanceId);
+            case 'get_element_text':
+              return await this.getElementText(args.instanceId, args.selector, args.timeout || 30000);
+            case 'get_element_attribute':
+              return await this.getElementAttribute(args.instanceId, args.selector, args.attribute, args.timeout || 30000);
+            case 'screenshot':
+              return await this.screenshot(args.instanceId, {
+                fullPage: args.fullPage || false,
+                type: args.type || 'png',
+                quality: args.quality || 80
+              }, args.selector);
+            case 'wait_for_element':
+              return await this.waitForElement(args.instanceId, args.selector, args.timeout || 30000);
+            case 'wait_for_navigation':
+              return await this.waitForNavigation(args.instanceId, args.timeout || 30000);
+            case 'evaluate':
+              return await this.evaluate(args.instanceId, args.script);
+            case 'get_markdown':
+              return await this.getMarkdown(args.instanceId, {
+                includeLinks: args.includeLinks ?? true,
+                maxLength: args.maxLength || 10000,
+                selector: args.selector
+              });
+            default:
+              return { success: false, error: `Unknown action: ${args.action}` };
+          }
 
         default:
-          return {
-            success: false,
-            error: `Unknown tool: ${name}`
-          };
+          return { success: false, error: `Unknown tool: ${name}` };
       }
     } catch (error) {
       return {
